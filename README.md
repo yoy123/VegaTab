@@ -1,7 +1,7 @@
 # VegaTab
 VegaTab for newer OS's
 
-I do not take credit for creating VegaTab. I am unsure of the original creator, owever, it was built for OSX 10.13 and I needed it to work for OSX 15.1.1
+I do not take credit for creating VegaTab. I am unsure of the original creator. It was built for OSX 10.13 and I needed it to work for OSX 15.1.1
 I modified the code just a smidge to get passed the OS restriction errors and it works perfectly. 
 
 1. Open the app and it will open a GUI in Safari broswer.
