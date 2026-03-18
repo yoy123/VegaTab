@@ -13,6 +13,7 @@ Full development session documenting all changes, decisions, and tuning work don
 **Fix:** Updated `Info.plist` to set `LSMinimumSystemVersionByArchitecture` → `x86_64` → `15.1`. Verified the kext generation pipeline (plist patching via `PlistBuddy`, binary PowerPlay table injection) works correctly on Sequoia.
 
 **Files changed:**
+
 - `Contents/Info.plist`
 
 ---
@@ -24,12 +25,14 @@ Full development session documenting all changes, decisions, and tuning work don
 **Solution:** Added Save Settings and Load Settings buttons to every GPU configuration page.
 
 #### Save Settings
+
 - Reads all current UI values (core clocks P0–P7, core voltages P0–P7, memory clocks P0–P3, memory voltage P3, fan speeds, fan sensitivity, target temperature, TDC)
 - Exports to a human-readable `.txt` file with one `key=value` per line
 - Downloads as `VegaTab_<GPU>_settings.txt`
 - The shell script (`VGtab.sh`) also saves the same format to Desktop when building a kext
 
 #### Load Settings
+
 - Opens a native file picker (accepts `.txt` files)
 - Parses the settings file and restores all values to the UI
 - Updates sliders, number inputs, and the Chart.js graph simultaneously
@@ -52,6 +55,7 @@ function handleSettingsFile(event) { /* parses .txt and updates all UI + chart *
 ```
 
 **HTML additions (each GPU page, e.g. `index64.html`):**
+
 ```html
 <input type="file" id="settingsFileInput" accept=".txt" style="display:none" onchange="handleSettingsFile(event)">
 <button class="create-button" onclick="loadSettings();">Load Settings</button>
@@ -59,12 +63,14 @@ function handleSettingsFile(event) { /* parses .txt and updates all UI + chart *
 ```
 
 **Shell script addition (`VGtab.sh`):**
+
 ```bash
 # Save human-readable settings for Load Settings feature
 cat /tmp/VGtmp.txt > ~/Desktop/VegaTab_${dev}_settings.txt
 ```
 
 **Files changed:**
+
 - `Contents/Resources/js/create.js` — Added settingsMap, saveSettings, loadSettings, handleSettingsFile
 - `Contents/Resources/index64.html` — Added file input and Save/Load buttons
 - `Contents/Resources/index56.html` — Same
@@ -83,39 +89,44 @@ cat /tmp/VGtmp.txt > ~/Desktop/VegaTab_${dev}_settings.txt
 After iterative testing, the following settings provide the best balance of performance, power efficiency, and thermal management on our Vega 64:
 
 #### Core Voltage (mV) — Aggressive Undervolt
-| P-State | P0 | P1 | P2 | P3 | P4 | P5 | P6 | P7 |
-|---------|----|----|----|----|----|----|----|----|
+
+| P-State | P0  | P1  | P2  | P3   | P4   | P5   | P6   | P7   |
+| ------- | --- | --- | --- | ---- | ---- | ---- | ---- | ---- |
 | Voltage | 800 | 900 | 950 | 1000 | 1000 | 1000 | 1050 | 1075 |
 
 **Key decision:** P4 and P5 held flat at 1000 mV. This creates a voltage plateau through the mid-range clocks (1200–1401 MHz), significantly reducing power draw and heat without impacting stability. The card spends most of its time in these P-states during gaming.
 
 #### Core Clock (MHz) — Slight Overclock at Top End
-| P-State | P0 | P1 | P2 | P3 | P4 | P5 | P6 | P7 |
-|---------|----|----|----|----|----|----|----|----|
-| Clock | 852 | 991 | 1084 | 1138 | 1200 | 1401 | 1536 | 1660 |
+
+| P-State | P0  | P1  | P2   | P3   | P4   | P5   | P6   | P7   |
+| ------- | --- | --- | ---- | ---- | ---- | ---- | ---- | ---- |
+| Clock   | 852 | 991 | 1084 | 1138 | 1200 | 1401 | 1536 | 1660 |
 
 **Key decision:** P7 boosted to 1660 MHz (stock is ~1630 MHz). Minor but gives extra headroom for peak loads.
 
 #### Memory
-| Parameter | Value | Notes |
-|-----------|-------|-------|
-| P3 Memory Clock | 1050 MHz | Above default 945 MHz — pushes HBM2 bandwidth |
-| P3 Memory Voltage | 1350 mV | Stock value, stable at 1050 MHz |
+
+| Parameter         | Value    | Notes                                          |
+| ----------------- | -------- | ---------------------------------------------- |
+| P3 Memory Clock   | 1050 MHz | Above default 945 MHz -- pushes HBM2 bandwidth |
+| P3 Memory Voltage | 1350 mV  | Stock value, stable at 1050 MHz                |
 
 #### Fan Settings
-| Parameter | Value | Notes |
-|-----------|-------|-------|
-| Idle Speed | 2200 RPM | Slightly below stock for quieter idle |
-| Target Speed | 3000 RPM | Keeps card cool without excessive noise |
-| Min Speed | 400 RPM | Unchanged |
-| Max Speed | 4900 RPM | Unchanged |
-| Sensitivity | 4836 | Stock value |
+
+| Parameter    | Value    | Notes                                    |
+| ------------ | -------- | ---------------------------------------- |
+| Idle Speed   | 2200 RPM | Slightly below stock for quieter idle    |
+| Target Speed | 3000 RPM | Keeps card cool without excessive noise  |
+| Min Speed    | 400 RPM  | Unchanged                                |
+| Max Speed    | 4900 RPM | Unchanged                                |
+| Sensitivity  | 4836     | Stock value                              |
 
 #### Power & Thermal
-| Parameter | Value | Notes |
-|-----------|-------|-------|
-| Target Temp | 70°C | Aggressive — fans ramp up early |
-| TDC (Power) | 42% | Below default 50% — reduces total power envelope |
+
+| Parameter   | Value | Notes                                             |
+| ----------- | ----- | ------------------------------------------------- |
+| Target Temp | 70°C  | Aggressive — fans ramp up early                   |
+| TDC (Power) | 42%   | Below default 50% — reduces total power envelope  |
 
 **Combined effect:** The undervolt + lower TDC means the card draws significantly less power while maintaining nearly the same clock speeds. The 70°C target with 3000 RPM fan target keeps thermals well controlled.
 
@@ -125,7 +136,7 @@ After iterative testing, the following settings provide the best balance of perf
 
 - Initialized git at `~/VGTab-git/` (macOS prevents `.git` creation in `/Applications/`)
 - Copied all files from `/Applications/VGTab.app/Contents/`
-- Pushed to https://github.com/yoy123/VegaTab
+- Pushed to <https://github.com/yoy123/VegaTab>
 - Removed pre-existing files from the remote (IORegistryExplorer.zip, old README)
 - Created README.md with project overview, feature docs, and best settings
 - Git credentials stored in macOS Keychain (no PAT in repo)
@@ -134,7 +145,7 @@ After iterative testing, the following settings provide the best balance of perf
 
 ### Architecture Reference
 
-```
+```text
 VGTab.app
 ├── Contents/
 │   ├── Info.plist                    # App metadata, URL scheme, min macOS
@@ -170,6 +181,7 @@ VGTab.app
 ```
 
 **Data flow:**
+
 1. User adjusts settings in HTML/JS GUI
 2. "Build Powerplay Table" encodes all values as base64 and triggers `vgtab://` URL
 3. AppleScript catches URL, passes base64 payload to `VGtab.sh`

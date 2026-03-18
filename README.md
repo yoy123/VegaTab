@@ -29,6 +29,7 @@ To make trial-and-error tuning less painful, **Save Settings** and **Load Settin
 - **Load Settings** — Opens a file picker to import a previously saved `.txt` settings file. All sliders, inputs, and the chart update instantly to reflect the loaded values.
 
 This means you can:
+
 1. Configure your settings and **Save** them before applying.
 2. Build and test the PowerPlay table.
 3. If something isn't right, tweak values and save a new version.
@@ -50,7 +51,7 @@ No more manually re-entering dozens of values between attempts.
 These are the settings I'm currently running on my Vega 64. They prioritize stability with a moderate undervolt and slightly boosted top-end clocks:
 
 | Parameter | Value |
-|-----------|-------|
+| --- | --- |
 | **Core Voltage (P0–P7)** | 800, 900, 950, 1000, 1000, 1000, 1050, 1075 mV |
 | **Core Clock (P0–P7)** | 852, 991, 1084, 1138, 1200, 1401, 1536, 1660 MHz |
 | **Memory Voltage (P3)** | 1350 mV |
